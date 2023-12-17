@@ -18,6 +18,8 @@ hashbrown = { version = "0.14", default-features = false, features = ["inline-mo
 indexmap = { version = "2.1", default-features = false, optional = true }
 multimap = { version = "0.9", default-features = false, optional = true }
 
+smolcrush = { version = "0.2", features = ["all"], optional = true }
+
 # platform specific, but the fastest hash algorithm ever
 [target.'cfg(any(target_arch = "aarch64", target_arch = "x86_64"))'.dependencies]
 hash = { package = "gxhash", version = "2.3", optional = true }
