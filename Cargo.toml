@@ -1,0 +1,41 @@
+[package]
+name = "fastutil"
+authors = ["satvrn"]
+description = "Fast utilities and optimizations for Rust."
+documentation = "https://docs.rs/fastutil"
+homepage = "https://github.com/notsatvrn/fastutil-rs"
+repository = "https://github.com/notsatvrn/fastutil-rs"
+readme = "README.md"
+keywords = ["collection", "hash", "rand"]
+categories = ["no-std"]
+version = "0.1.0"
+rust-version = "1.63.0"
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+hashbrown = { version = "0.14", default-features = false, features = ["inline-more"], optional = true }
+indexmap = { version = "2.1", default-features = false, optional = true }
+multimap = { version = "0.9", default-features = false, optional = true }
+
+# platform specific, but the fastest hash algorithm ever
+[target.'cfg(any(target_arch = "aarch64", target_arch = "x86_64"))'.dependencies]
+hash = { package = "gxhash", version = "2.3", optional = true }
+
+# nearly as fast as fxhash but w/ far less collisions
+[target.'cfg(not(any(target_arch = "aarch64", target_arch = "x86_64")))'.dependencies]
+hash = { package = "zwohash", version = "0.1", optional = true }
+
+[features]
+default = ["hash", "indexmap", "rand"]
+
+std = ["indexmap/std"]
+alloc = ["hashbrown"]
+
+indexmap = ["dep:indexmap", "hash"]
+multimap = ["dep:multimap", "hash", "std"] # breaks no_std
+serde = ["indexmap/serde", "multimap/serde_impl"]
+
+rand = ["dep:smolcrush"]
+
+nightly = ["hashbrown/nightly"]
